@@ -1,7 +1,24 @@
 package com.hackerrank.stocktrades.model;
 
+import com.hackerrank.stocktrades.validation.StockType;
+
+
+import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
+
+@Entity
+@SequenceGenerator(name="seq", initialValue=1, allocationSize=100)
 public class StockTrade {
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.SEQUENCE , generator = "seq" )
     private Integer id;
+
+    @StockType
     private String type;
     private Integer userId;
     private String symbol;
@@ -63,6 +80,9 @@ public class StockTrade {
         this.symbol = symbol;
     }
 
+    @NotNull
+    @Min( 1 )
+    @Max( 100 )
     public Integer getShares() {
         return shares;
     }
@@ -85,5 +105,24 @@ public class StockTrade {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StockTrade that = (StockTrade) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(symbol, that.symbol) &&
+                Objects.equals(shares, that.shares) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(timestamp, that.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, userId, symbol, shares, price, timestamp);
     }
 }
